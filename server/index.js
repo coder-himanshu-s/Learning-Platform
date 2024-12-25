@@ -1,11 +1,31 @@
 import express from "express";
 import dotenv from "dotenv";
-dotenv.config();
 import mongoose from "mongoose";
+import connectDb from "./database/db.js";
+import userRouter from "./routes/userRouter.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
 
+dotenv.config();
+connectDb();
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
+
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors({
+    origin:"http://localhost:8080",
+    credentials:true
+}));
+
+app.use("/",userRouter);
+
+
+app.get("/",(req,res)=>{
+    res.send("this is home route");
+})
+
 
 app.listen(PORT,()=>{
     console.log(`server is listening on port no ${PORT}`);
