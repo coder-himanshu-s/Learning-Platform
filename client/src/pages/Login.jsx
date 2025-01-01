@@ -16,6 +16,7 @@ import {
 } from "@/features/api/authApi";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 const Login = () => {
@@ -45,6 +46,8 @@ const Login = () => {
     },
   ] = useLoginUserMutation();
 
+  const navigate = useNavigate();
+
   const changeInputHandler = (e, type) => {
     const { name, value } = e.target;
     if (type === "signup") {
@@ -64,9 +67,12 @@ const Login = () => {
   useEffect(() => {
     if (registerIsSuccess && registerData) {
       toast.success("Signup Successfully");
+      setsignupInput({ name: "", email: "", password: "" });
     }
     if (loginIsSuccess && loginData) {
       toast.success("login Successful");
+      setLoginInput({ email: "", password: "" });
+      navigate("/");
     }
     if (registerError) {
       toast.error(" Signup failed");
@@ -84,7 +90,7 @@ const Login = () => {
   ]);
 
   return (
-    <div className="flex items-center w-full justify-center">
+    <div className="flex items-center w-full justify-center mt-20">
       <Tabs defaultValue="account" className="w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
