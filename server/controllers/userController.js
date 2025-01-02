@@ -67,11 +67,59 @@ export const login = async (req, res) => {
     }
 
     generateToken(res, user, `Welcome back ${user.name}`);
+    console.log('Cookies after login:', req.cookies);
   } catch (e) {
     console.error("Login Error:", e);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
+    });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    console.log("Logout is called");
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", 
+      sameSite: "strict", 
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({
+      success: false,
+      message: "Some error occurred while logging out. Please try again.",
+    });
+  }
+};
+
+
+export const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.id; 
+    const user = await User.findById(userId).select("-password"); 
+    console.log(`user is ${user}`);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message:"User received",
+      user,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({
+      success: false,
+      message: "Error in fetching profile. Please try again later.",
     });
   }
 };
