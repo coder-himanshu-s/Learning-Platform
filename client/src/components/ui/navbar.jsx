@@ -48,7 +48,7 @@ const Navbar = () => {
                 <DropdownMenuTrigger asChild>
                   <Avatar>
                     <AvatarImage
-                      src="https://github.com/shadcn.png"
+                      src={ user?.photoUrl || "https://github.com/shadcn.png" }
                       alt="@shadcn"
                     />
                     <AvatarFallback>CN</AvatarFallback>

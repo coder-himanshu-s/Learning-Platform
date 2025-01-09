@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import {
   Dialog,
@@ -12,12 +12,55 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader, Loader2 } from "lucide-react";
 import Course from "./Course";
-import { useLoadUserQuery } from "@/features/api/authApi";
+import {
+  useLoadUserQuery,
+  useUpdateUserMutation,
+} from "@/features/api/authApi";
+import { toast } from "sonner";
 const Profile = () => {
+  const [name, setName] = useState("");
+  const [profilePhoto, setProfiePhoto] = useState("");
+  const { data, isLoading, refetch } = useLoadUserQuery();
+  const [
+    updateUser,
+    {
+      data: updateUserData,
+      isLoading: updateUserIsLoading,
+      isSuccess,
+      isError,
+      error,
+    },
+  ] = useUpdateUserMutation();
 
-  const  {data,isLoading} = useLoadUserQuery();
-  console.log(data);
+  useEffect(() => {
+    if (isSuccess) {
+      refetch();
+      toast.success(updateUserData.message || "Profile Updated");
+    }
+    if (isError) {
+      toast.error(error.message || "Failed to update User ");
+    }
+  }, [error,updateUserData, isSuccess, isError]);
+  // console.log(data);
   const enrolledCourses = [1, 2, 3, 4];
+  const onChangeHandler = (e) => {
+    const file = e.target.files?.[0];
+    if (file) setProfiePhoto(file);
+  };
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  // console.log(` this is photourl ${data.user.photoUrl}`)
+
+  const { user } = data;
+  const updateUserHandler = async () => {
+    //  console.log(name, profilePhoto);
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("profilePhoto", profilePhoto);
+    await updateUser(formData);
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 my-20">
       <h1 className="font-bold text-2xl text-center md:text-left">
@@ -27,7 +70,11 @@ const Profile = () => {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 my-5">
         <div className="flex flex-col items-center">
           <Avatar className="h-24 w-24 md:h-32 md:w-32  mb-4 rounded-full">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            {/* src="https://github.com/shadcn.png"  */}
+            <AvatarImage
+              src={user?.photoUrl || "https://github.com/shadcn.png"}
+              alt="@shadcn"
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </div>
@@ -36,19 +83,19 @@ const Profile = () => {
             <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Name:
               <span className="font-normal text-gray-799 dark:text-gray-300">
-                Sharma
+                {user.name}
               </span>
             </h1>
             <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Email:
               <span className="font-normal text-gray-799 dark:text-gray-300">
-                sharma@gmail.com
+                {user.email}
               </span>
             </h1>
             <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Role:
               <span className="font-normal text-gray-799 dark:text-gray-300">
-                Student
+                {user.role.toUpperCase()}
               </span>
             </h1>
           </div>
@@ -70,7 +117,9 @@ const Profile = () => {
                   <label>Name</label>
                   <input
                     type="text"
+                    value={name}
                     placeholder="Name"
+                    onChange={(e) => setName(e.target.value)}
                     className="col-span-3"
                   ></input>
                 </div>
@@ -79,13 +128,17 @@ const Profile = () => {
                   <input
                     type="file"
                     accept="image/*"
+                    onChange={onChangeHandler}
                     className="col-span-3"
                   ></input>
                 </div>
               </div>
               <DialogFooter>
-                <Button disabled={isLoading}>
-                  {isLoading ? (
+                <Button
+                  disabled={updateUserIsLoading}
+                  onClick={updateUserHandler}
+                >
+                  {updateUserIsLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
                       Wait

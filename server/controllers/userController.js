@@ -1,6 +1,7 @@
 import { User } from "../models/userSchema.js";
 import bcryptjs from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
+import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
   try {
@@ -67,7 +68,7 @@ export const login = async (req, res) => {
     }
 
     generateToken(res, user, `Welcome back ${user.name}`);
-    console.log('Cookies after login:', req.cookies);
+    console.log("Cookies after login:", req.cookies);
   } catch (e) {
     console.error("Login Error:", e);
     return res.status(500).json({
@@ -77,15 +78,9 @@ export const login = async (req, res) => {
   }
 };
 
-export const logout = async (req, res) => {
+export const logout = async (_, res) => {
   try {
-    console.log("Logout is called");
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", 
-      sameSite: "strict", 
-    });
-    return res.status(200).json({
+    return res.status(200).cookie("token", "", { maxAge: 0 }).json({
       success: true,
       message: "Logged out successfully",
     });
@@ -98,12 +93,11 @@ export const logout = async (req, res) => {
   }
 };
 
-
 export const getUserProfile = async (req, res) => {
   try {
-    const userId = req.id; 
-    const user = await User.findById(userId).select("-password"); 
-    console.log(`user is ${user}`);
+    const userId = req.id;
+    const user = await User.findById(userId).select("-password");
+    // console.log(`user is ${user}`);
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -112,7 +106,7 @@ export const getUserProfile = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      message:"User received",
+      message: "User received",
       user,
     });
   } catch (e) {
@@ -120,6 +114,46 @@ export const getUserProfile = async (req, res) => {
     res.status(400).json({
       success: false,
       message: "Error in fetching profile. Please try again later.",
+    });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.id;
+    const { name } = req.body;
+    const profilePhoto = req.file;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    // extract the public id of the old image exists
+
+    if (user.photoUrl) {
+      const publicId = user.photoUrl.split("/").pop().split(".")[0];
+      deleteMediaFromCloudinary(publicId);
+    }
+    const cloudResponse = await uploadMedia(profilePhoto.path);
+    const photoUrl = cloudResponse.secure_url;
+    const updatedData = { name, photoUrl };
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {
+      new: true,
+    }).select("-password");
+
+    return res.status(200).json({
+      success: true,
+      user: updatedUser,
+      message: "User is updated Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "failed to update profile",
     });
   }
 };
