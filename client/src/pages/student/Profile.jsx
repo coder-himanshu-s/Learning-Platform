@@ -17,6 +17,7 @@ import {
   useUpdateUserMutation,
 } from "@/features/api/authApi";
 import { toast } from "sonner";
+
 const Profile = () => {
   const [name, setName] = useState("");
   const [profilePhoto, setProfiePhoto] = useState("");
@@ -38,21 +39,19 @@ const Profile = () => {
       toast.success(updateUserData.message || "Profile Updated");
     }
     if (isError) {
+      console.log(error);
       toast.error(error.message || "Failed to update User ");
     }
-  }, [error,updateUserData, isSuccess, isError]);
+  }, [error, updateUserData, isSuccess, isError]);
   // console.log(data);
   const enrolledCourses = [1, 2, 3, 4];
   const onChangeHandler = (e) => {
     const file = e.target.files?.[0];
     if (file) setProfiePhoto(file);
   };
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  // console.log(` this is photourl ${data.user.photoUrl}`)
 
-  const { user } = data;
+  // console.log(` this is photourl ${data.user.photoUrl}`)
+  // console.log(data);
   const updateUserHandler = async () => {
     //  console.log(name, profilePhoto);
     const formData = new FormData();
@@ -60,7 +59,11 @@ const Profile = () => {
     formData.append("profilePhoto", profilePhoto);
     await updateUser(formData);
   };
-
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  const user = data && data.user;
+  console.log(user);
   return (
     <div className="max-w-4xl mx-auto px-4 my-20">
       <h1 className="font-bold text-2xl text-center md:text-left">

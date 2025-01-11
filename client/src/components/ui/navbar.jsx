@@ -1,5 +1,5 @@
 import { School } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -30,10 +30,24 @@ import {
 } from "@/components/ui/sheet";
 import DarkMode from "@/pages/DarkMode";
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import MyLearning from "@/pages/student/Mylearning";
+import { useLogoutUserMutation } from "@/features/api/authApi";
+import { toast } from "sonner";
+
 const Navbar = () => {
   const user = true;
+  const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
+  const navigate = useNavigate();
+  const logoutHandler = async (req, res) => {
+    await logoutUser();
+  };
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "logout successful");
+      navigate("/login")
+    }
+  }, [isSuccess]);
   return (
     <div className="h-16 dark:bg-[#020817] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
       <div className=" max-w-7xl mx-auto hidden md:flex justify-between items-center gap-5 h-full">
@@ -48,7 +62,7 @@ const Navbar = () => {
                 <DropdownMenuTrigger asChild>
                   <Avatar>
                     <AvatarImage
-                      src={ user?.photoUrl || "https://github.com/shadcn.png" }
+                      src={user?.photoUrl || "https://github.com/shadcn.png"}
                       alt="@shadcn"
                     />
                     <AvatarFallback>CN</AvatarFallback>
@@ -58,12 +72,16 @@ const Navbar = () => {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem><Link to="Profile">Edit Profile</Link></DropdownMenuItem>
-                    <DropdownMenuItem><Link to="MyLearning">My Learning</Link></DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link to="Profile">Edit Profile</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link to="MyLearning">My Learning</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Dashboard</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Log Out</DropdownMenuItem>
+                    <DropdownMenuItem onClick={logoutHandler}>Log Out</DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                 </DropdownMenuContent>
@@ -80,7 +98,7 @@ const Navbar = () => {
       </div>
       <div className=" md:hidden items-center justify-between px-4 h-full">
         <h1 className="font-extrabold text-2xl">E Learning</h1>
-        
+
         <MobileNavBar />
       </div>
     </div>
@@ -107,23 +125,20 @@ const MobileNavBar = () => {
           <SheetTitle>E Learning</SheetTitle>
           <DarkMode></DarkMode>
         </SheetHeader>
-        <Separator className="mt-2"/>
+        <Separator className="mt-2" />
         <nav className="flex flex-col space-y-4">
           <span>My Learning</span>
           <span>Edit Profile</span>
           <span>Dashboard</span>
           <span>Log Out</span>
         </nav>
-        {
-          role === "instructor" && (
-            <SheetFooter>
+        {role === "instructor" && (
+          <SheetFooter>
             <SheetClose asChild>
               <Button type="submit">Save changes</Button>
             </SheetClose>
           </SheetFooter>
-          )
-        }
-
+        )}
       </SheetContent>
     </Sheet>
   );
