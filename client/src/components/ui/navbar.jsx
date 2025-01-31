@@ -34,9 +34,10 @@ import { Link, useNavigate } from "react-router";
 import MyLearning from "@/pages/student/Mylearning";
 import { useLogoutUserMutation } from "@/features/api/authApi";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const user = true;
+  const { user } = useSelector((store) => store.auth);
   const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
   const navigate = useNavigate();
   const logoutHandler = async (req, res) => {
@@ -45,7 +46,7 @@ const Navbar = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data.message || "logout successful");
-      navigate("/login")
+      navigate("/login");
     }
   }, [isSuccess]);
   return (
@@ -79,17 +80,26 @@ const Navbar = () => {
                       <Link to="MyLearning">My Learning</Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Dashboard</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={logoutHandler}>Log Out</DropdownMenuItem>
+                    {user.role === "instructor" && (
+                      <>
+                        <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                       
+                      </>
+                    )}
+                     <DropdownMenuItem onClick={logoutHandler}>
+                          Log Out
+                        </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <div className="flex items-center gap-2">
-                <Button variant="outline">Log In</Button>
-                <Button>Sign Up</Button>
+                <Button variant="outline" onClick={() => navigate("/login")}>
+                  Log In
+                </Button>
+                <Button onClick={() => navigate("/login")}>Sign Up</Button>
               </div>
             )}
             <DarkMode />

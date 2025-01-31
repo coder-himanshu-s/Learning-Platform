@@ -59,6 +59,10 @@ const Profile = () => {
     formData.append("profilePhoto", profilePhoto);
     await updateUser(formData);
   };
+
+  useEffect(() => {
+    refetch();
+  }, []);
   if (isLoading) {
     return <div>Loading...</div>;
   }
