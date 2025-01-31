@@ -121,7 +121,7 @@ export const getUserProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.id;
-    const { name } = req.body;
+    const { name ,photoUrl} = req.body;
     const profilePhoto = req.file;
     const user = await User.findById(userId);
     if (!user) {
@@ -131,14 +131,18 @@ export const updateProfile = async (req, res) => {
       });
     }
     // extract the public id of the old image exists
+    const updatedData = { name };
 
-    if (user.photoUrl) {
-      const publicId = user.photoUrl.split("/").pop().split(".")[0];
-      deleteMediaFromCloudinary(publicId);
+    if (profilePhoto) {
+      if (user.photoUrl) {
+        const publicId = user.photoUrl.split("/").pop().split(".")[0];
+        deleteMediaFromCloudinary(publicId);
+      }
+      const cloudResponse = await uploadMedia(profilePhoto.path);
+      updatedData.photoUrl = cloudResponse.secure_url;
+    } else if (photoUrl === null || photoUrl === "") {
+      updatedData.photoUrl = "https://github.com/shadcn.png";
     }
-    const cloudResponse = await uploadMedia(profilePhoto.path);
-    const photoUrl = cloudResponse.secure_url;
-    const updatedData = { name, photoUrl };
 
     const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {
       new: true,
