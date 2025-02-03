@@ -1,4 +1,5 @@
 import { Course } from "../models/courseSchema.js";
+import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 
 export const createCourse = async (req, res) => {
   try {
@@ -18,7 +19,7 @@ export const createCourse = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Course created",
-      course
+      course,
     });
   } catch (e) {
     console.log(e);
@@ -29,27 +30,85 @@ export const createCourse = async (req, res) => {
   }
 };
 
-export const getCreatorCourses = async ( req, res)=>{
-  try{
+export const getCreatorCourses = async (req, res) => {
+  try {
     const userId = req.id;
-    const courses = await Course.find({creator:userId})
-    if( !courses ) {
+    const courses = await Course.find({ creator: userId });
+    if (!courses) {
       return res.status(404).json({
-        courses:[],
+        courses: [],
         message: " Courses not found",
-        success:false
-      })
+        success: false,
+      });
     }
 
     return res.status(200).json({
-      success:true,
-      courses
-    })
-  }catch(e){
-    console.log(e); 
+      success: true,
+      courses,
+    });
+  } catch (e) {
+    console.log(e);
     return res.status(500).json({
-      success:false,
-      message:"Failed to get all course"
-    })
+      success: false,
+      message: "Failed to get all course",
+    });
   }
-}
+};
+
+export const editCourse = async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+    const {
+      courseTitle,
+      category,
+      subTitle,
+      description,
+      courseLevel,
+      coursePrice,
+    } = req.body;
+    const thumbnail = req.file;
+    let course = await Course.findById(req.params.courseId);
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    let courseThumbnail;
+    if (thumbnail) {
+      if (courseThumbnail) {
+        const publicId = course.courseThumbnail.split("/").pop().split(".")[0];
+        await deleteMediaFromCloudinary(publicId);
+      }
+
+      courseThumbnail = await uploadMedia(thumbnail.path);
+    }
+
+    const updatedData = {
+      courseTitle,
+      category,
+      subTitle,
+      description,
+      courseLevel,
+      coursePrice,
+      courseThumbnail: courseThumbnail?.secure_url,
+    };
+
+    course = await Course.findByIdAndUpdate(courseId, updatedData, {
+      new: true,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Course updated",
+      course,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update course",
+    });
+  }
+};
