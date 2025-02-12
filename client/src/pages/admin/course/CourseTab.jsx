@@ -21,7 +21,10 @@ import {
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
-import { useEditCourseMutation } from "@/features/api/courseApi";
+import {
+  useEditCourseMutation,
+  useGetCourseByIdQuery,
+} from "@/features/api/courseApi";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 
@@ -35,11 +38,30 @@ const CourseTab = () => {
     coursePrice: "",
     courseThumbnail: "",
   });
+  const params = useParams();
+  const courseId = params.courseId;
+  const { data: courseByIdData, isLoading: courseByIdIsLoading, refetch } =
+  useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true });
+
+
+  useEffect(() => {
+    if (courseByIdData?.course) {
+      const course = courseByIdData?.course;
+      setInput({
+        courseTitle: course.courseTitle,
+        subTitle: course.subTitle,
+        description: course.description,
+        category: course.category,
+        courseLevel: course.courseLevel,
+        coursePrice: course.coursePrice,
+        courseThumbnail: course.courseThumbnail,
+      });
+    }
+  }, [courseByIdData]);
   const [previewThumbnail, setPreviewThumbnail] = useState("");
   const isPublished = false;
   const navigate = useNavigate();
-  const params = useParams();
-  const courseId = params.courseId;
+
   const [editCourse, { data, isLoading, isSuccess, isError }] =
     useEditCourseMutation();
   const changeEventHandler = (e) => {
@@ -72,18 +94,23 @@ const CourseTab = () => {
     formData.append("courseLevel", input.courseLevel);
     formData.append("coursePrice", input.coursePrice);
     formData.append("courseThumbnail", input.courseThumbnail);
-    await editCourse({formData, courseId});
+    await editCourse({ formData, courseId });
   };
 
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message || "Course Updated Successfully");
-      navigate("/admin/course");
+      refetch();
+      navigate("/admin/course");  
     }
     if (isError) {
       toast.error(data?.message || "Failed to update course");
     }
   }, [isSuccess, isError]);
+
+  if (courseByIdIsLoading) {
+    return <Loader2 className="h-4 w-4 animate-spin">Please Wait</Loader2>;
+  }
   return (
     <div>
       <Card className="mt-4">
