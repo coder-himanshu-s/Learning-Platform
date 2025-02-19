@@ -1,19 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useCreateLectureMutation, useGetCourseLectureQuery } from "@/features/api/courseApi";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Loader2 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
 
 const CreateLecture = () => {
   const params = useParams();
   const { courseId } = params;
   const [lectureTitle, setLectureTitle] = useState("");
-  const isLoading = false;
   const navigate = useNavigate();
-  const createLectureHandler = async()=>{
-    
-  }
+
+  const [createLecture, { data, isLoading, error, isSuccess }] =
+    useCreateLectureMutation();
+
+  const { data:lectureData,isLoading:lectureLoading} = useGetCourseLectureQuery(courseId);
+  const createLectureHandler = async () => {
+    await createLecture({ lectureTitle, courseId });
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message);
+    }
+    if (error) {
+      toast.error(error.data.message);
+    }
+  }, [isSuccess, error]);
+  console.log(lectureData);
   return (
     <div className="flex-1 mx-10 mt-16">
       <div className="mb-4">

@@ -1,4 +1,5 @@
 import { Course } from "../models/courseSchema.js";
+import { Lecture } from "../models/lecture.model.js";
 import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 
 export const createCourse = async (req, res) => {
@@ -114,10 +115,10 @@ export const editCourse = async (req, res) => {
 };
 
 export const getCourseById = async (req, res) => {
-  try{
+  try {
     const courseId = req.params.courseId;
     const course = await Course.findById(courseId);
-    if(!course){
+    if (!course) {
       return res.status(404).json({
         success: false,
         message: "Course not found",
@@ -128,11 +129,65 @@ export const getCourseById = async (req, res) => {
       success: true,
       course,
     });
-  }catch(e){
+  } catch (e) {
     console.log(e);
     return res.status(500).json({
       success: false,
       message: "Failed to get course",
     });
   }
-}
+};
+
+export const createLecture = async (req, res) => {
+  try {
+    const { lectureTitle } = req.body;
+    const { courseId } = req.params;
+    if (!lectureTitle || !courseId) {
+      return res.status(400).json({
+        success: false,
+        message: "Lecture Title is required",
+      });
+    }
+
+    const lecture = await Lecture.create({ lectureTitle });
+    const course = await Course.findById(courseId);
+    if (course) {
+      course.lectures.push(lecture._id);
+      await course.save();
+    }
+    return res.status(201).json({
+      success: true,
+      message: "Lecture created successfully",
+      lecture,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getCourseLecture = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const course = await Course.findById(courseId).populate("lectures");
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message:"This is from coursecontroller",
+      lectures: course.lectures
+    });
+  } catch (error) {
+    // console.error("Error fetching lectures:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error on getting the lectures ",
+    });
+  }
+};
