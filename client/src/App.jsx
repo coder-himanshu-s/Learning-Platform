@@ -1,19 +1,20 @@
-import { RouterProvider } from 'react-router';
-import './App.css'
-import Navbar from './components/ui/navbar';
-import MainLayout from './layout/MainLayout';
-import Login from './pages/Login';
-import HeroSection from './pages/student/HeroSection';
-import { createBrowserRouter } from 'react-router';
-import Courses from './pages/student/Courses';
-import MyLearning from './pages/student/Mylearning';
-import Profile from './pages/student/Profile';
-import Sidebar from './pages/admin/lecture/Sidebar';
-import Dashboard from './pages/admin/lecture/Dashboard';
-import CourseTable from './pages/admin/course/CourseTable';
-import AddCourse from './pages/admin/course/AddCourse';
-import EditCourse from './pages/admin/course/EditCourse';
-import CreateLecture from './pages/admin/lecture/CreateLecture';
+import { RouterProvider } from "react-router";
+import "./App.css";
+import Navbar from "./components/ui/navbar";
+import MainLayout from "./layout/MainLayout";
+import Login from "./pages/Login";
+import HeroSection from "./pages/student/HeroSection";
+import { createBrowserRouter } from "react-router";
+import Courses from "./pages/student/Courses";
+import MyLearning from "./pages/student/Mylearning";
+import Profile from "./pages/student/Profile";
+import Sidebar from "./pages/admin/lecture/Sidebar";
+import Dashboard from "./pages/admin/lecture/Dashboard";
+import CourseTable from "./pages/admin/course/CourseTable";
+import AddCourse from "./pages/admin/course/AddCourse";
+import EditCourse from "./pages/admin/course/EditCourse";
+import CreateLecture from "./pages/admin/lecture/CreateLecture";
+import EditLecture from "./pages/admin/lecture/EditLecture";
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -53,31 +54,32 @@ const appRouter = createBrowserRouter([
           },
           {
             path: "course/create",
-            element: <AddCourse/>,
+            element: <AddCourse />,
           },
           {
-            path:"course/edit/:courseId",
-            element:<EditCourse/>
+            path: "course/edit/:courseId",
+            element: <EditCourse />,
           },
           {
-            path:"course/edit/:courseId/lecture",
-            element:<CreateLecture/>
-          }
+            path: "course/edit/:courseId/lecture",
+            element: <CreateLecture />,
+          },
+          {
+            path: "course/edit/:courseId/lecture/:lectureId",
+            element: <EditLecture />,
+          },
         ],
       },
     ],
   },
 ]);
 
-
-
 function App() {
-
   return (
     <>
-      <RouterProvider router={appRouter}/>
+      <RouterProvider router={appRouter} />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

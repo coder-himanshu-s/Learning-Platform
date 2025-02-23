@@ -1,11 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useCreateLectureMutation, useGetCourseLectureQuery } from "@/features/api/courseApi";
+import {
+  useCreateLectureMutation,
+  useGetCourseLectureQuery,
+} from "@/features/api/courseApi";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import Lecture from "./Lecture";
 
 const CreateLecture = () => {
   const params = useParams();
@@ -16,13 +20,19 @@ const CreateLecture = () => {
   const [createLecture, { data, isLoading, error, isSuccess }] =
     useCreateLectureMutation();
 
-  const { data:lectureData,isLoading:lectureLoading} = useGetCourseLectureQuery(courseId);
+  const {
+    data: lectureData,
+    isLoading: lectureLoading,
+    isError: lectureError,
+    refetch
+  } = useGetCourseLectureQuery(courseId);
   const createLectureHandler = async () => {
     await createLecture({ lectureTitle, courseId });
   };
 
   useEffect(() => {
     if (isSuccess) {
+      refetch();
       toast.success(data.message);
     }
     if (error) {
@@ -68,6 +78,24 @@ const CreateLecture = () => {
               "Create lecture"
             )}
           </Button>
+        </div>
+        <div className="mt-10">
+          {lectureLoading ? (
+            <p>Loading Lecture...</p>
+          ) : lectureError ? (
+            <p>Failed to laod lectures</p>
+          ) : lectureData.lectures.length === 0 ? (
+            <p>No lectures available</p>
+          ) : (
+            lectureData.lectures.map((lecture, index) => (
+              <Lecture
+                key={lecture._id}
+                lecture={lecture}
+                index={index}
+                courseId={courseId}
+              ></Lecture>
+            ))
+          )}
         </div>
       </div>
     </div>
