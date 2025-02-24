@@ -201,7 +201,7 @@ const CourseTab = () => {
                       <SelectItem value="networking">Networking</SelectItem>
                       <SelectItem value="security">Cybersecurity</SelectItem>
                       <SelectItem value="docker">
-                        Docker & Kubernetes
+                        Docker & Kubettnetes
                       </SelectItem>
                       <SelectItem value="cloud">Cloud Computing</SelectItem>
                     </SelectGroup>
