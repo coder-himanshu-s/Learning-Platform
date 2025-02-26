@@ -23,7 +23,7 @@ export const courseApi = createApi({
         url: "/creator-course",
         method: "GET",
       }),
-      invalidatesTags: ["Refetch_Creator_Course"],
+      providesTags: ["Refetch_Creator_Course"],
     }),
     editCourse: builder.mutation({
       query: ({ formData, courseId }) => ({
@@ -61,7 +61,7 @@ export const courseApi = createApi({
         courseId,
         lectureId,
       }) => ({
-        url: `/course/${courseId}/lecture/${lectureId}`,
+        url: `/course/edit/${courseId}/lecture/${lectureId}`,
         method: "POST",
         body: { lectureTitle, videoInfo, isPreviewFree },
       }),
@@ -79,6 +79,13 @@ export const courseApi = createApi({
         method:"GET",
       }),
     }),
+    publishCourse: builder.query({
+      query:({courseId,query})=>({
+        url:`/course/edit/${courseId}?publish=${query}`,
+        method:"GET",
+      }),
+      providesTags:["Refetch_Creator_Course"]
+    })
   }),
 });
 export const {
@@ -91,4 +98,5 @@ export const {
   useEditLectureMutation,
   useRemoveLectureMutation,
   useGetLectureByIdQuery,
+  useLazyPublishCourseQuery,
 } = courseApi;

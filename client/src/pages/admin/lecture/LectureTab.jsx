@@ -121,7 +121,7 @@ const LectureTab = () => {
             {removeLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin">Wait...</Loader2>
             ) : (
-              "Lecture"
+              "Remove Lecture"
             )}
           </Button>
         </div>

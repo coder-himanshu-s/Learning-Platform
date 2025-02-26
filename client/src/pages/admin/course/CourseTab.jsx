@@ -24,6 +24,8 @@ import { useNavigate, useParams } from "react-router";
 import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
+  useLazyPublishCourseQuery,
+  
 } from "@/features/api/courseApi";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
@@ -40,9 +42,11 @@ const CourseTab = () => {
   });
   const params = useParams();
   const courseId = params.courseId;
-  const { data: courseByIdData, isLoading: courseByIdIsLoading, refetch } =
-  useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true });
-
+  const {
+    data: courseByIdData,
+    isLoading: courseByIdIsLoading,
+    refetch,
+  } = useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true });
 
   useEffect(() => {
     if (courseByIdData?.course) {
@@ -59,7 +63,6 @@ const CourseTab = () => {
     }
   }, [courseByIdData]);
   const [previewThumbnail, setPreviewThumbnail] = useState("");
-  const isPublished = false;
   const navigate = useNavigate();
 
   const [editCourse, { data, isLoading, isSuccess, isError }] =
@@ -97,11 +100,23 @@ const CourseTab = () => {
     await editCourse({ formData, courseId });
   };
 
+  const [publishCourse, {}] = useLazyPublishCourseQuery();
+  const publishStatusHandler = async (action) => {
+    try {
+      const response = await publishCourse( {courseId, query: action} );
+      if (response.data) {
+        refetch();
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to publish or unpublish course");
+    }
+  };
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message || "Course Updated Successfully");
       refetch();
-      navigate("/admin/course");  
+      navigate("/admin/course");
     }
     if (isError) {
       toast.error(data?.message || "Failed to update course");
@@ -122,8 +137,16 @@ const CourseTab = () => {
             </CardDescription>
           </div>
           <div className="flex items-center">
-            <Button variant="outline" className="mr-2">
-              {isPublished ? "Unpublish" : "Publish"}
+            <Button
+              disabled={courseByIdData?.course.lectures.length === 0}
+              variant="outline"
+              onClick={() =>
+                publishStatusHandler(
+                  courseByIdData?.course.isPublished ? "false" : "true"
+                )
+              }
+            >
+              {courseByIdData?.course.isPublished ? "Unpublished" : "Publish"}
             </Button>
             <Button>Remove Course </Button>
           </div>
