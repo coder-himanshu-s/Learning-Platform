@@ -11,12 +11,14 @@ import {
   editLecture,
   removeLecture,
   getLectureById,
+  getPublishedCourse,
 } from "../controllers/courseController.js";
 import upload from "../utils/multer.js";
 import { get } from "mongoose";
 
 const router = express.Router();
 router.route("/course").post(isAuthenticated, createCourse);
+router.route("/published-courses").get(isAuthenticated, getPublishedCourse);
 router.route("/creator-course").get(isAuthenticated, getCreatorCourses);
 router
   .route("/course/:courseId")
@@ -31,5 +33,7 @@ router
   .post(isAuthenticated, editLecture);
 router.route("/lecture/:lectureId").delete(isAuthenticated, removeLecture);
 router.route("/lecture/:lectureId").get(isAuthenticated, getLectureById);
-router.route("/course/edit/:courseId").get(isAuthenticated, togglePublishCourse);
+router
+  .route("/course/edit/:courseId")
+  .get(isAuthenticated, togglePublishCourse);
 export default router;
