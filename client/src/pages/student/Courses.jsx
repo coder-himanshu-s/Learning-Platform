@@ -6,12 +6,10 @@ import { useGetPublishedCourseQuery } from "@/features/api/courseApi";
 
 const Courses = () => {
   const { data, isLoading, isSuccess, isError } = useGetPublishedCourseQuery();
+  console.log(data);
   if (isError) {
     return <h1>Some error occurred...</h1>;
   }
-
- 
-
   return (
     <div className="bg-gray-50">
       <div className="max-wl7xl mx-autoo p-6">

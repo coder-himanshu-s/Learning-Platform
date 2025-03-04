@@ -165,7 +165,7 @@ const Profile = () => {
           {enrolledCourses.length === 0 ? (
             <p>You have not enrolled in any courses</p>
           ) : (
-            enrolledCourses.map((course, index) => <Course key={index} />)
+            enrolledCourses.map((course, index) => <Course key={index} course={course}/>)
           )}
         </div>
       </div>
