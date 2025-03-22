@@ -14,7 +14,7 @@ import {
   getPublishedCourse,
 } from "../controllers/courseController.js";
 import upload from "../utils/multer.js";
-import { get } from "mongoose";
+import { purchaseCourse, verifyPayment } from "../controllers/purchaseController.js";
 
 const router = express.Router();
 router.route("/course").post(isAuthenticated, createCourse);
@@ -36,4 +36,6 @@ router.route("/lecture/:lectureId").get(isAuthenticated, getLectureById);
 router
   .route("/course/edit/:courseId")
   .get(isAuthenticated, togglePublishCourse);
+router.route("/course-detail/:courseId/purchase").post(isAuthenticated,purchaseCourse);
+router.route("/course-detail/:courseId/validate").post(isAuthenticated, verifyPayment);
 export default router;
