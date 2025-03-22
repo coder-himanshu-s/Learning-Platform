@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import BuyCourseButton from "@/components/ui/BuyCourseButton";
 import {
@@ -10,10 +11,10 @@ import {
 } from "@/components/ui/card";
 import { SelectSeparator } from "@/components/ui/select";
 import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
-import React from "react";
 
 const CourseDetails = () => {
-  const purchasedCourse = false;
+  const [purchasedCourse, setPurchasedCourse] = useState(false);
+
   return (
     <div className="mt-24">
       <div className="bg-[#2D2F31] text-white">
@@ -44,7 +45,11 @@ const CourseDetails = () => {
               {[1, 2, 3].map((_, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <span>
-                    {true ? <PlayCircle size={14} /> : <Lock size={14} />}
+                    {purchasedCourse ? (
+                      <PlayCircle size={14} />
+                    ) : (
+                      <Lock size={14} />
+                    )}
                   </span>
                   <p>Lecture Title</p>
                 </div>
@@ -63,13 +68,11 @@ const CourseDetails = () => {
               <h1 className="text-lg md:text-xl font-semibold">Course Price</h1>
             </CardContent>
             <CardFooter className="flex justify-between p-4">
-             {
-                purchasedCourse ? (
-                  <Button className="w-full">Start Learning</Button>
-                ) : (
-                  <BuyCourseButton />
-                )
-             }
+              {purchasedCourse ? (
+                <Button className="w-full">Start Learning</Button>
+              ) : (
+                <BuyCourseButton setPurchasedCourse={setPurchasedCourse} /> 
+              )}
             </CardFooter>
           </Card>
         </div>
