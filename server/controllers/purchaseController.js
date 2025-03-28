@@ -5,7 +5,7 @@ dotenv.config();
 import { Course } from "../models/courseSchema.js";
 import { PurchaseCourse } from "../models/purchaseCourseSchema.js";
 import { Lecture } from "../models/lecture.model.js";
-import { User} from "../models/userSchema.js"
+import { User } from "../models/userSchema.js";
 export const purchaseCourse = async (req, res) => {
   try {
     const userId = req.id;
@@ -119,15 +119,15 @@ export const verifyPayment = async (req, res) => {
 
     await User.findByIdAndUpdate(
       purchase.userId,
-      {$addToSet:{enrolledCourses:purchase.courseId._id}},
-      {new:true}
-    )
-    
+      { $addToSet: { enrolledCourses: purchase.courseId._id } },
+      { new: true }
+    );
+
     await Course.findByIdAndUpdate(
       purchase.courseId._id,
-      {$addToSet:{enrolledStudents:purchase.userId}},
-      {new:true}
-    )
+      { $addToSet: { enrolledStudents: purchase.userId } },
+      { new: true }
+    );
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -135,4 +135,68 @@ export const verifyPayment = async (req, res) => {
       error: error.message,
     });
   }
-}
+};
+
+export const getCourseWithDetails = async (req, res) => {
+  try {
+    const userId = req.id;
+    const { courseId } = req.params;
+    const course = await Course.findById(courseId)
+      .populate({ path: "creator" })
+      .populate({ path: "lectures" });
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+    const purchase = await PurchaseCourse.findOne({
+      courseId: courseId,
+      userId: userId,
+    });
+    if (!purchase) {
+      return res.status(404).json({
+        success: false,
+        message: "Purchase not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      course,
+      purchased: !!purchase,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to get course with details",
+      error: error.message,
+    });
+  }
+};
+
+export const getAllPurchasedCourse = async (req, res) => {
+  try {
+    const userId = req.id;
+    const purchasedCourses = await PurchaseCourse.find({
+      status: "completed",
+    }).populate("courseId");
+    if (!purchasedCourses || purchasedCourses.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No purchased courses found",
+        purchaseCourse: [],
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Purchased courses found",
+      purchaseCourse: purchasedCourses,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to get all purchased courses",
+      error: error.message,
+    });
+  }
+};

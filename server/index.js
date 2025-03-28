@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import connectDb from "./database/db.js";
 import userRouter from "./routes/userRouter.js";
 import courseRoute from "./routes/courseRouter.js";
+import mediaRouter from "./routes/mediaRouter.js"
+import progressRouter from "./routes/progressRouter.js"
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -25,7 +27,8 @@ app.use(
 
 app.use("/", userRouter);
 app.use("/", courseRoute);
-
+app.use("/", mediaRouter);
+app.use("/", progressRouter);
 app.get("/", (req, res) => {
   res.send("this is home route");
 });
