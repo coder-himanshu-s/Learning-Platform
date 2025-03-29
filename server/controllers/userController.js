@@ -96,7 +96,7 @@ export const logout = async (_, res) => {
 export const getUserProfile = async (req, res) => {
   try {
     const userId = req.id;
-    const user = await User.findById(userId).select("-password");
+    const user = await User.findById(userId).select("-password").populate("enrolledCourses");
     // console.log(`user is ${user}`);
     if (!user) {
       return res.status(404).json({
@@ -111,9 +111,9 @@ export const getUserProfile = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
-    res.status(400).json({
+    res.status(500).json({
       success: false,
-      message: "Error in fetching profile. Please try again later.",
+      message: e.message
     });
   }
 };

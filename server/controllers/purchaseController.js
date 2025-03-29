@@ -154,12 +154,12 @@ export const getCourseWithDetails = async (req, res) => {
       courseId: courseId,
       userId: userId,
     });
-    if (!purchase) {
-      return res.status(404).json({
-        success: false,
-        message: "Purchase not found",
-      });
-    }
+    // if (!purchase) {
+    //   return res.status(404).json({
+    //     success: false,
+    //     message: "Purchase not found",
+    //   });
+    // }
     return res.status(200).json({
       success: true,
       course,
