@@ -67,6 +67,7 @@ const Profile = () => {
     return <div>Loading...</div>;
   }
   const user = data && data.user;
+  // console.log('from profilw')
   console.log(user);
   return (
     <div className="max-w-4xl mx-auto px-4 my-20">
@@ -165,7 +166,7 @@ const Profile = () => {
           {enrolledCourses.length === 0 ? (
             <p>You have not enrolled in any courses</p>
           ) : (
-            enrolledCourses.map((course, index) => <Course key={index} course={course}/>)
+            user.enrolledCourses.map((course) => <Course key={course._id} course={course}/>)
           )}
         </div>
       </div>
