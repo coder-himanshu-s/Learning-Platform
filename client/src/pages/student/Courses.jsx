@@ -1,6 +1,6 @@
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import Course from "./Course";
+import Course from "../Course";
 import { useGetPublishedCourseQuery } from "@/features/api/courseApi";
 
 

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Loader, Loader2 } from "lucide-react";
-import Course from "./Course";
+import Course from "../Course";
 import {
   useLoadUserQuery,
   useUpdateUserMutation,
