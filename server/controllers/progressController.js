@@ -20,15 +20,17 @@ export const getCourseProgress = async (req, res) => {
         data: {
           courseDetails,
           completed: false,
-          lectureProgress: [],
+          progress: [],
         },
       });
     }
 
     return res.status(200).json({
-      courseDetails,
-      completed: courseProgress.completed,
-      lectureProgress: courseProgress.lectureProgress,
+      data: {
+        courseDetails,
+        completed: courseProgress.completed,
+        progress: courseProgress.lectureProgress,
+      },
     });
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -56,15 +58,15 @@ export const updatelectureProgress = async (req, res) => {
     const lectureIndex = courseProgress.lectureProgress.findIndex(
       (lecture) => lecture.lectureId === lectureId
     );
-    ` `;
-    if (lectureIndex === -1) {
+    if (lectureIndex !== -1) {
+      courseProgress.lectureProgress[lectureIndex].viewed = true;
+    } else {
       courseProgress.lectureProgress.push({
         lectureId,
         viewed: true,
       });
-    } else {
-      courseProgress.lectureProgress[lectureIndex].viewed = true;
     }
+    
 
     const lectureProgressLength = courseProgress.lectureProgress.filter(
       (lectureProg) => lectureProg.viewed
@@ -110,26 +112,26 @@ export const markAsCompleted = async (req, res) => {
 };
 
 export const markAsInCompleted = async (req, res) => {
-    try {
-      const { courseId } = req.params;
-      const userId = req.id;
-      const courseProgress = await CourseProgress.findOne({
-        userId,
-        courseId,
-      });
-      if (!courseProgress) {
-        return res.status(404).json({ message: "Course progress not found" });
-      }
-      courseProgress.lectureProgress.map(
-        (lectureProgress) => (lectureProgress.viewed = false)
-      );
-      courseProgress.completed = false;
-      await courseProgress.save();
-      return res
-        .status(200)
-        .json({ message: "Course marked as incompleted", success: true });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: error.message, success: false });
+  try {
+    const { courseId } = req.params;
+    const userId = req.id;
+    const courseProgress = await CourseProgress.findOne({
+      userId,
+      courseId,
+    });
+    if (!courseProgress) {
+      return res.status(404).json({ message: "Course progress not found" });
     }
-  };
+    courseProgress.lectureProgress.map(
+      (lectureProgress) => (lectureProgress.viewed = false)
+    );
+    courseProgress.completed = false;
+    await courseProgress.save();
+    return res
+      .status(200)
+      .json({ message: "Course marked as incompleted", success: true });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
