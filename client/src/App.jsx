@@ -16,6 +16,14 @@ import EditLecture from "./pages/admin/lecture/EditLecture";
 import CourseDetails from "./pages/student/CourseDetails";
 import CourseProgress from "./pages/student/CourseProgress";
 import SearchPage from "./pages/student/SearchPage";
+import {
+  AdminRoute,
+  AuthenticatedUser,
+  ProtectedRoute,
+} from "./components/ui/ProtectedRoutes";
+import Sidebar from "./pages/admin/lecture/Sidebar";
+import PurchaseCourseProtectedRoute from "./components/ui/PurchaseCourseProtectedRoute";
+import { ThemeProvider } from "./components/ui/ThemeProvider";
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -36,15 +44,27 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "MyLearning",
-        element: <MyLearning />,
+        element: (
+          <ProtectedRoute>
+            <MyLearning />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "Profile",
-        element: <Profile />,
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "course/search",
-        element: <SearchPage />,
+        element: (
+          <ProtectedRoute>
+            <SearchPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "course-detail/:courseId",
@@ -52,34 +72,64 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "course-progress/:courseId",
-        element: <CourseProgress />,
+        element: (
+          <ProtectedRoute>
+            <PurchaseCourseProtectedRoute>
+              <CourseProgress />
+            </PurchaseCourseProtectedRoute>
+          </ProtectedRoute>
+        ),
       },
       {
         path: "admin",
         children: [
           {
             path: "dashboard",
-            element: <Dashboard />,
+            element: (
+              <AdminRoute>
+                <Dashboard />
+              </AdminRoute>
+            ),
           },
           {
             path: "course",
-            element: <CourseTable />,
+            element: (
+              <AdminRoute>
+                <CourseTable />
+              </AdminRoute>
+            ),
           },
           {
             path: "course/create",
-            element: <AddCourse />,
+            element: (
+              <AdminRoute>
+                <AddCourse />
+              </AdminRoute>
+            ),
           },
           {
             path: "course/edit/:courseId",
-            element: <EditCourse />,
+            element: (
+              <AdminRoute>
+                <EditCourse />
+              </AdminRoute>
+            ),
           },
           {
             path: "course/edit/:courseId/lecture",
-            element: <CreateLecture />,
+            element: (
+              <AdminRoute>
+                <CreateLecture />
+              </AdminRoute>
+            ),
           },
           {
             path: "course/edit/:courseId/lecture/:lectureId",
-            element: <EditLecture />,
+            element: (
+              <AdminRoute>
+                <EditLecture />
+              </AdminRoute>
+            ),
           },
         ],
       },
@@ -90,7 +140,9 @@ const appRouter = createBrowserRouter([
 function App() {
   return (
     <>
-      <RouterProvider router={appRouter} />
+      <ThemeProvider>
+        <RouterProvider router={appRouter} />
+      </ThemeProvider>
     </>
   );
 }

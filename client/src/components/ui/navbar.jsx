@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/sheet";
 import DarkMode from "@/pages/DarkMode";
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { Link, useNavigate } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import MyLearning from "@/pages/student/Mylearning";
 import { useLogoutUserMutation } from "@/features/api/authApi";
 import { toast } from "sonner";
@@ -85,7 +85,9 @@ const Navbar = () => {
                     <DropdownMenuSeparator />
                     {user.role === "instructor" && (
                       <>
-                        <DropdownMenuItem><Link to={'/admin/dashboard'}>Dashboard</Link></DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link to={"/admin/dashboard"}>Dashboard</Link>
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                       </>
                     )}
@@ -110,8 +112,7 @@ const Navbar = () => {
       </div>
       <div className=" md:hidden items-center justify-between px-4 h-full">
         <h1 className="font-extrabold text-2xl">E Learning</h1>
-
-        <MobileNavBar />
+        <MobileNavBar user={user} />
       </div>
     </div>
   );
@@ -119,8 +120,12 @@ const Navbar = () => {
 
 export default Navbar;
 
-const MobileNavBar = () => {
-  const role = "instructor";
+const MobileNavBar = ({ user }) => {
+  const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
+  const navigate = useNavigate();
+  const logoutHandler = async (req, res) => {
+    await logoutUser();
+  };
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -139,15 +144,23 @@ const MobileNavBar = () => {
         </SheetHeader>
         <Separator className="mt-2" />
         <nav className="flex flex-col space-y-4">
-          <span>My Learning</span>
-          <span>Edit Profile</span>
-          <span>Dashboard</span>
-          <span>Log Out</span>
+          <Link to='/myLearning'>
+            My Learning
+          </Link>
+          <Link to='/Profile'>
+            Edit Profile
+          </Link>
+          <Link onClick={logoutHandler}>Log Out</Link>
         </nav>
-        {role === "instructor" && (
+        {user?.role === "instructor" && (
           <SheetFooter>
             <SheetClose asChild>
-              <Button type="submit">Save changes</Button>
+              <Button
+                type="submit"
+                onClick={() => navigate("/admin/dashboard")}
+              >
+                DashBoard
+              </Button>
             </SheetClose>
           </SheetFooter>
         )}
