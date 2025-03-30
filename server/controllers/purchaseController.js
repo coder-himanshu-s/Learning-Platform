@@ -180,6 +180,7 @@ export const getAllPurchasedCourse = async (req, res) => {
     const purchasedCourses = await PurchaseCourse.find({
       status: "completed",
     }).populate("courseId");
+    console.log("purchased Courses",purchasedCourses)
     if (!purchasedCourses || purchasedCourses.length === 0) {
       return res.status(404).json({
         success: false,
@@ -193,6 +194,7 @@ export const getAllPurchasedCourse = async (req, res) => {
       purchaseCourse: purchasedCourses,
     });
   } catch (error) {
+    console.error("Error in getAllPurchasedCourse:", error);
     res.status(500).json({
       success: false,
       message: "Failed to get all purchased courses",

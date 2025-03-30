@@ -175,7 +175,7 @@ export const getCourseById = async (req, res) => {
     console.log(e);
     return res.status(500).json({
       success: false,
-      message: "Failed to get course",
+      message: "Failed to get course from coursecontroller",
     });
   }
 };

@@ -28,8 +28,12 @@ router.route("/search").get(isAuthenticated, searchCourse);
 router.route("/published-courses").get(isAuthenticated, getPublishedCourse);
 router.route("/creator-course").get(isAuthenticated, getCreatorCourses);
 router
+  .route("/course/allPurchased")
+  .get(isAuthenticated, getAllPurchasedCourse);
+router
   .route("/course/:courseId")
   .put(isAuthenticated, upload.single("courseThumbnail"), editCourse);
+
 router.route("/course/:courseId").get(isAuthenticated, getCourseById);
 router.route("/course/:courseId/lecture").post(isAuthenticated, createLecture);
 router
@@ -51,8 +55,5 @@ router
   .post(isAuthenticated, verifyPayment);
 router
   .route("/course/:courseId/detail-complete")
-  .get(isAuthenticated, getCourseWithDetails);
-router
-  .route("/course/allPurchased")
-  .get(isAuthenticated, getAllPurchasedCourse);
+  .get(isAuthenticated, getCourseWithDetails)
 export default router;
