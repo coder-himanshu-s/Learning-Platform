@@ -31,7 +31,6 @@ import {
 import DarkMode from "@/pages/DarkMode";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Link, Navigate, useNavigate } from "react-router";
-import MyLearning from "@/pages/student/Mylearning";
 import { useLogoutUserMutation } from "@/features/api/authApi";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
@@ -80,7 +79,7 @@ const Navbar = () => {
                       <Link to="Profile">Edit Profile</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      <Link to="MyLearning">My Learning</Link>
+                      <Link to="Mylearning">My Learning</Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     {user.role === "instructor" && (
