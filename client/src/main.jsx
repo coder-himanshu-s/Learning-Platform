@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import { appStore } from "./app/store";
 import { Toaster } from "sonner";
 import { useLoadUserQuery } from "./features/api/authApi";
-import LoadingSpinner from "./components/ui/loadingSpinner";
+import LoadingSpinner from "./components/ui/LoadingSpinner.jsx";
 
 const Custom = ({ children }) => {
   const { isLoading } = useLoadUserQuery(); 
