@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import HeroSection from "./pages/student/HeroSection";
 import { createBrowserRouter } from "react-router";
 import Courses from "./pages/student/Courses";
-import MyLearning from "./pages/student/Mylearning";
+import MyLearning from "./pages/student/MyLearning";
 import Profile from "./pages/student/Profile";
 import Dashboard from "./pages/admin/lecture/Dashboard";
 import CourseTable from "./pages/admin/course/CourseTable";
