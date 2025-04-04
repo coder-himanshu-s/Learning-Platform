@@ -70,7 +70,7 @@ const Login = () => {
       setsignupInput({ name: "", email: "", password: "" });
     }
     if (loginIsSuccess && loginData) {
-      toast.success(`${loginData.message}`);
+      toast.success(`${loginData?.message}`);
       setLoginInput({ email: "", password: "" });
       navigate("/");
       setTimeout(() => {
@@ -81,7 +81,7 @@ const Login = () => {
       toast.error(" Signup failed");
     }
     if (loginError) {
-      toast.error( loginError.data.message || "Login failed");
+      toast.error( loginError?.data?.message || "Login failed");
     }
   }, [
     loginIsLoading,
