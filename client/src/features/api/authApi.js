@@ -49,6 +49,7 @@ export const authApi = createApi({
       query: () => ({
         url: "profile",
         method: "GET",
+        credentials: "include",
       }),
       async onQueryStarted(_, { queryFulfilled, dispatch }) {
         try {
