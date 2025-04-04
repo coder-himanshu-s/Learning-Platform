@@ -13,9 +13,9 @@ const BuyCourseButton = ({ setPurchasedCourse }) => {
     console.log("Processing payment...");
   
     try {
-      const fetchUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/";
+      const fetchUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
       const response = await fetch(
-        `${fetchUrl}api/course-detail/${courseId}/purchase`,
+        `${fetchUrl}/api/course-detail/${courseId}/purchase`,
         {
           method: "POST",
           body: JSON.stringify({}),
@@ -50,7 +50,7 @@ const BuyCourseButton = ({ setPurchasedCourse }) => {
           };
   
           const validateRes = await fetch(
-            `${fetchUrl}api/course-detail/${courseId}/validate`,
+            `${fetchUrl}/api/course-detail/${courseId}/validate`,
             {
               method: "POST",
               body: JSON.stringify(body),
