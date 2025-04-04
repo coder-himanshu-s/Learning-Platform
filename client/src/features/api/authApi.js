@@ -4,21 +4,21 @@ const USER_API = import.meta.env.VITE_API_URL || "http://localhost:8080/";
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${USER_API}/api`,
+    baseUrl: `${USER_API}`,
     credentials: "include",
   }),
 
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (inputData) => ({
-        url: "/register",
+        url: "/api/register",
         method: "POST",
         body: inputData,
       }),
     }),
     loginUser: builder.mutation({
       query: (inputData) => ({
-        url: "/login",
+        url: "/api/login",
         method: "POST",
         body: inputData,
       }),
@@ -33,7 +33,7 @@ export const authApi = createApi({
     }),
     logoutUser: builder.mutation({
       query: () => ({
-        url: "/logout",
+        url: "/api/logout",
         method: "POST",
       }),
       async onQueryStarted(_, { queryFulfilled, dispatch }) {
@@ -47,7 +47,7 @@ export const authApi = createApi({
     }),
     loadUser: builder.query({
       query: () => ({
-        url: "/profile",
+        url: "/api/profile",
         method: "GET",
         credentials: "include",
       }),
@@ -62,7 +62,7 @@ export const authApi = createApi({
     }),
     updateUser: builder.mutation({
       query: (formData) => ({
-        url: "/profile/update",
+        url: "/api/profile/update",
         method: "PUT",
         body: formData,
         credentials: "include",

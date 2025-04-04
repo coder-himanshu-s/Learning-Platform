@@ -5,16 +5,16 @@ const COURSE_PURCHASE_API =import.meta.env.VITE_API_URL || "http://localhost:808
 export const purchaseApi = createApi({
   reducerPath: "purchaseApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${COURSE_PURCHASE_API}/api`,
+    baseUrl: `${COURSE_PURCHASE_API}`,
     credentials: "include",  // ✅ This allows cookies (sessions) to be sent
   }),
   endpoints: (builder) => ({
     getCourseDetailsWithStatus: builder.query({
-      query: (courseId) => `/course/${courseId}/detail-complete`,
+      query: (courseId) => `/api/course/${courseId}/detail-complete`,
     }),
 
     getAllPurchasedCourse: builder.query({
-      query: () => `/course/allPurchased`,
+      query: () => `/api/course/allPurchased`,
     }),
   }),
 });
