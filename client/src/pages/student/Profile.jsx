@@ -91,7 +91,7 @@ const Profile = () => {
             <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Name:
               <span className="font-normal text-gray-799 dark:text-gray-300">
-                {user.name}
+                {user?.name}
               </span>
             </h1>
             <h1 className="font-semibold text-gray-900 dark:text-gray-100">

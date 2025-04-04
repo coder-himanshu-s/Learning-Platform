@@ -14,7 +14,7 @@ const BuyCourseButton = ({ setPurchasedCourse }) => {
   
     try {
       const response = await fetch(
-        `http://localhost:8080/course-detail/${courseId}/purchase`,
+        `${import.meta.env.VITE_API_URL}/course-detail/${courseId}/purchase`,
         {
           method: "POST",
           body: JSON.stringify({}),
@@ -49,7 +49,7 @@ const BuyCourseButton = ({ setPurchasedCourse }) => {
           };
   
           const validateRes = await fetch(
-            `http://localhost:8080/course-detail/${courseId}/validate`,
+            `${import.meta.env.VITE_API_URL}/course-detail/${courseId}/validate`,
             {
               method: "POST",
               body: JSON.stringify(body),
