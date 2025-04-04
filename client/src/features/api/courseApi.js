@@ -5,14 +5,14 @@ export const courseApi = createApi({
   reducerPath: "courseApi",
   tagTypes: ["Refetch_Creator_Course", "Refetch_Lecture"],
   baseQuery: fetchBaseQuery({
-    baseUrl: COURSE_API,
+    baseUrl: `${COURSE_API}api`,
     credentials: "include",
   }),
 
   endpoints: (builder) => ({
     createCourse: builder.mutation({
       query: ({ courseTitle, category }) => ({
-        url: "course",
+        url: "/course",
         method: "POST",
         body: { courseTitle, category },
       }),
