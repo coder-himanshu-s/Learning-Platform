@@ -4,7 +4,7 @@ const USER_API = import.meta.env.VITE_API_URL || "http://localhost:8080/";
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${USER_API}api`,
+    baseUrl: `${USER_API}`,
     credentials: "include",
   }),
 

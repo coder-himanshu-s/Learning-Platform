@@ -4,7 +4,7 @@ const COURSE_PORGRESS_API =  import.meta.env.VITE_API_URL ||  "http://localhost:
 export const courseProgressApi = createApi({
   reducerPath: "courseProgressApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${COURSE_PORGRESS_API}api`,
+    baseUrl: `${COURSE_PORGRESS_API}`,
     credentials: "include",
   }),
   endpoints: (builder) => ({
