@@ -38,16 +38,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // API Routes
-app.use("/", userRouter);
-app.use("/", courseRoute);
-app.use("/", mediaRouter);
-app.use("/", progressRouter);
+app.use("/api", userRouter);
+app.use("/api", courseRoute);
+app.use("/api", mediaRouter);
+app.use("/api", progressRouter);
 
 // Serve Static Frontend Files (React Build)
 const CLIENT_BUILD_PATH = path.join(__dirname, "../client/dist");
 app.use(express.static(CLIENT_BUILD_PATH));
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("this is home route");
 });
 
