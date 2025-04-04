@@ -8,6 +8,7 @@ const lectureSchema = new mongoose.Schema(
     },
     videoUrl: {
       type: String,
+      set: (url) => url.replace("http://", "https://"),
     },
     publicId: {
       type: String,
