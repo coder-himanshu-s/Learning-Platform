@@ -7,6 +7,8 @@ import mediaRouter from "./routes/mediaRouter.js";
 import progressRouter from "./routes/progressRouter.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 connectDb();
@@ -14,9 +16,13 @@ connectDb();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// Fix __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const allowedOrigins = [
   "http://localhost:5173", 
-  "https://learning-platform-2.onrender.com", 
+  "https://learning-platform-2.onrender.com",
 ];
 
 app.use(
@@ -31,15 +37,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// API Routes
 app.use("/", userRouter);
 app.use("/", courseRoute);
 app.use("/", mediaRouter);
 app.use("/", progressRouter);
 
+// Serve Static Frontend Files (React Build)
+const CLIENT_BUILD_PATH = path.join(__dirname, "../client/dist");
+app.use(express.static(CLIENT_BUILD_PATH));
+
 app.get("/", (req, res) => {
   res.send("this is home route");
 });
 
+// Handle React Routes (Fix for Reloading Issue)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(CLIENT_BUILD_PATH, "index.html"));
+});
+
+// Start Server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
