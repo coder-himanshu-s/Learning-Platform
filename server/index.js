@@ -10,39 +10,36 @@ import cors from "cors";
 
 dotenv.config();
 connectDb();
+
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(express.json());
-app.use(cookieParser());
-
 const allowedOrigins = [
-  "http://localhost:5173", // Local development
-  "https://learning-platform-2.onrender.com", // Deployed frontend
+  "http://localhost:5173", 
+  "https://learning-platform-2.onrender.com", 
 ];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: allowedOrigins,
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // Allow cookies and authentication headers
   })
 );
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use("/", userRouter);
 app.use("/", courseRoute);
 app.use("/", mediaRouter);
 app.use("/", progressRouter);
+
 app.get("/", (req, res) => {
   res.send("this is home route");
 });
 
 app.listen(PORT, () => {
-  console.log(`server is listening on port no ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
