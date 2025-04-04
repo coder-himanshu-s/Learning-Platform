@@ -5,7 +5,7 @@ const COURSE_PURCHASE_API =import.meta.env.VITE_API_URL || "http://localhost:808
 export const purchaseApi = createApi({
   reducerPath: "purchaseApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${COURSE_PURCHASE_API}`,
+    baseUrl: `${COURSE_PURCHASE_API}/api`,
     credentials: "include",  // ✅ This allows cookies (sessions) to be sent
   }),
   endpoints: (builder) => ({
