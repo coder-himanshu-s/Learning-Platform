@@ -17,7 +17,8 @@ import { useGetCourseDetailsWithStatusQuery } from "@/features/api/purchaseApi.j
 const CourseDetails = () => {
   const [purchasedCourse, setPurchasedCourse] = useState(false);
   const { courseId } = useParams();
-  const { data, isSuccess, isLoading, error } = useGetCourseDetailsWithStatusQuery(courseId);
+  const { data, isSuccess, isLoading, error } =
+    useGetCourseDetailsWithStatusQuery(courseId);
   const course = data?.course;
   const purchased = data?.purchased;
   const updatedAt = course?.updatedAt;
@@ -40,22 +41,28 @@ const CourseDetails = () => {
   console.log(`from details page`);
   console.log(data);
 
-  const handleContinueCourse = ()=>{
-        if( purchased){
-          navigate(`/course-progress/${courseId}`)
-        }
-  }
+  const handleContinueCourse = () => {
+    if (purchased) {
+      navigate(`/course-progress/${courseId}`);
+    }
+  };
 
   return (
     <div className="mt-24">
       {/* Course Header */}
       <div className="bg-[#2D2F31] text-white">
         <div className="max-w-7xl mx-auto py-8 px-4 flex-col gap-2">
-          <h1 className="font-bold text-2xl md:text-3xl">{course?.courseTitle || "Course Title"}</h1>
-          <p className="text-base md:text-lg">{course?.subTitle || "Course SubTitle"}</p>
+          <h1 className="font-bold text-2xl md:text-3xl">
+            {course?.courseTitle || "Course Title"}
+          </h1>
+          <p className="text-base md:text-lg">
+            {course?.subTitle || "Course SubTitle"}
+          </p>
           <p>
             Created By -{" "}
-            <span className="text-[#C0C4FC] underline italic">{course?.creator?.name}</span>
+            <span className="text-[#C0C4FC] underline italic">
+              {course?.creator?.name}
+            </span>
           </p>
           <div className="flex items-center gap-2 text-md">
             <BadgeInfo size={16} />
@@ -70,17 +77,26 @@ const CourseDetails = () => {
         {/* Left Section - Course Description */}
         <div className="w-full lg:w-1/2 space-y-5">
           <h1 className="font-bold text-xl md:text-2xl">Description</h1>
-          <p className="text-sm">{course?.description || "This is course Description"}</p>
-
+          <div
+            className="text-sm space-y-2"
+            dangerouslySetInnerHTML={{
+              __html:
+                course?.description || "<p>This is course Description</p>",
+            }}
+          ></div>
           <Card>
             <CardHeader>
               <CardTitle>Course Content</CardTitle>
-              <CardDescription>{course?.lectures?.length || 0} Lectures</CardDescription>
+              <CardDescription>
+                {course?.lectures?.length || 0} Lectures
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
               {course?.lectures?.map((lecture, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <span>{purchased ? <PlayCircle size={14} /> : <Lock size={14} />}</span>
+                  <span>
+                    {purchased ? <PlayCircle size={14} /> : <Lock size={14} />}
+                  </span>
                   <p>{lecture?.lectureTitle || "Lecture Title"}</p>
                 </div>
               ))}
@@ -94,21 +110,31 @@ const CourseDetails = () => {
             <CardContent className="p-4 flex flex-col space-y-4">
               {/* Video Section */}
               <div className="w-full aspect-video bg-gray-300 rounded-lg overflow-hidden">
-                <video className="w-full h-full object-cover" src={course?.lectures[0]?.videoUrl} controls></video>
+                <video
+                  className="w-full h-full object-cover"
+                  src={course?.lectures[0]?.videoUrl}
+                  controls
+                ></video>
               </div>
 
               {/* Title and Price Section */}
               <div className="flex flex-col items-center space-y-2">
-                <h1 className="text-md font-medium text-center">{course?.lectures[0]?.lectureTitle || "Lecture Title"}</h1>
+                <h1 className="text-md font-medium text-center">
+                  {course?.lectures[0]?.lectureTitle || "Lecture Title"}
+                </h1>
                 <SelectSeparator className="my-2" />
-                <h1 className="text-lg md:text-xl font-semibold text-center">{course?.coursePrice}</h1>
+                <h1 className="text-lg md:text-xl font-semibold text-center">
+                  {course?.coursePrice}
+                </h1>
               </div>
             </CardContent>
 
             {/* Purchase Button */}
             <CardFooter className="flex justify-between p-4">
               {purchased ? (
-                <Button onClick={handleContinueCourse} className="w-full">Start Learning</Button>
+                <Button onClick={handleContinueCourse} className="w-full">
+                  Start Learning
+                </Button>
               ) : (
                 <BuyCourseButton setPurchasedCourse={setPurchasedCourse} />
               )}

@@ -1,0 +1,29 @@
+* [33m55673a5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Configure lectures controllers
+* [33m7a8055a[m Completed the payment page
+* [33m091a937[m Complete the payment controller
+* [33m049ec54[m Details page for course
+* [33mcac5456[m Payment Addtion
+* [33m1591d51[m Add CourseDetails page and BuyCourseButton component; update Course and Profile components
+* [33mb7de2cc[m Setup the home and course pages
+* [33ma625ddb[m Setup the course cosntroller for home page
+* [33m91b5b42[m Setup the lectures page
+* [33mdb48f25[m Setup lectures controller
+* [33m1158628[m sm Changes
+* [33ma4fc5fb[m Setup the LectureTab.jsx
+* [33mc25214d[m Setup the Lectures controller
+* [33m053c6bb[m Configure lecture page
+* [33md9151b4[m Confiure course controller
+* [33m2f01745[m Setup the Edit Course Page
+* [33mffae2bf[m Added courses controllers
+* [33mfba5e7c[m Added admin features
+* [33m44cab17[m Added multer and navbar pages setup
+* [33m050e2c8[m Adding setup for cloudinary and profile editing
+* [33m2081c00[m Logout implementation
+* [33mf36d3b5[m Setting update profile routes in server and profile page in client
+* [33m1cfc307[m Setup logout and get user routes
+* [33m011124a[m Add NavBar,MyLearnig,Course,Courses,etc Pages
+* [33m2a1f6db[m Create store and authslice for login and register
+* [33m131fd9b[m Remove .env file from tracking
+* [33mf1d4c22[m Setting up backend for registration and login routes
+* [33mca957ac[m Setup project. Login and Signup setup for frontend
+* [33m793a1b7[m Initial commit
