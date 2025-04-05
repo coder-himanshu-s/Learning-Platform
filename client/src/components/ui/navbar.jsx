@@ -138,17 +138,15 @@ const MobileNavBar = ({ user }) => {
       </SheetTrigger>
       <SheetContent className="flex flex-col">
         <SheetHeader className="flex flexrow items-center justify-between mt-2">
-          <SheetTitle>E Learning</SheetTitle>
+          <SheetTitle>
+            <Link to="/">E Learning</Link>
+          </SheetTitle>
           <DarkMode></DarkMode>
         </SheetHeader>
         <Separator className="mt-2" />
         <nav className="flex flex-col space-y-4">
-          <Link to='/myLearning'>
-            My Learning
-          </Link>
-          <Link to='/Profile'>
-            Edit Profile
-          </Link>
+          <Link to="/myLearning">My Learning</Link>
+          <Link to="/Profile">Edit Profile</Link>
           <Link onClick={logoutHandler}>Log Out</Link>
         </nav>
         {user?.role === "instructor" && (

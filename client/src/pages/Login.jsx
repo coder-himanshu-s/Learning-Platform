@@ -25,6 +25,7 @@ const Login = () => {
     name: "",
     email: "",
     password: "",
+    role: "student",
   });
 
   const [
@@ -81,7 +82,7 @@ const Login = () => {
       toast.error(" Signup failed");
     }
     if (loginError) {
-      toast.error( loginError?.data?.message || "Login failed");
+      toast.error(loginError?.data?.message || "Login failed");
     }
   }, [
     loginIsLoading,
@@ -142,6 +143,19 @@ const Login = () => {
                   placeholder="Enter password"
                   onChange={(e) => changeInputHandler(e, "signup")}
                 />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="role">Role</Label>
+                <select
+                  id="role"
+                  name="role"
+                  value={signupInput.role}
+                  onChange={(e) => changeInputHandler(e, "signup")}
+                  className="w-full p-2 border rounded-md"
+                >
+                  <option value="student">Student</option>
+                  <option value="instructor">Instructor</option>
+                </select>
               </div>
             </CardContent>
             <CardFooter>
